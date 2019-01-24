@@ -2,7 +2,7 @@
 Statistics for websites using Ghost, the best platform for blogging. Learn more at [Ghost.org](https://ghost.org).
 
 ## Development
-The website uses Flask (a python framework) and is hosted on Heroku.
+The website uses Flask (a python framework) and is hosted on Heroku. The website looks for Public API access (deprecated), or for the meta tag added to the header. Then it requests API data about the posts, cleans the data, and feeds it into [Chart.js](https://www.chartjs.org/) HTML5 Canvas charts.
 
 ## Setup
 1. Install and setup virtual environment
