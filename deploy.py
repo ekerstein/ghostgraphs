@@ -76,21 +76,11 @@ def result(website):
             raise
 
         # Try to find API keys
-        client_secret_begin = website_source.find('clientSecret:')
         content_api_begin = website_source.find('name="ghostgraphs"')
+        client_secret_begin = website_source.find('clientSecret:') 
         
-        # 1) Public API
-        if client_secret_begin != -1:
-            client_secret_end = website_source.find('});', client_secret_begin)
-            # Get secret
-            client_secret = website_source[client_secret_begin + 15:client_secret_end - 2]
-            # Set variables
-            api_type = "public"
-            client_id = 'ghost-frontend' 
-            api_url = 'ghost/api/v0.1'
-            api_key = '?client_id={}&client_secret={}'.format(client_id, client_secret)
-        # 2) Content API
-        elif content_api_begin != -1:
+        # 1) Content API
+        if content_api_begin != -1:
             content_api_begin = website_source.find('content', content_api_begin)
             content_api_end = website_source.find('/>', content_api_begin)
             # Get key
@@ -99,6 +89,17 @@ def result(website):
             api_type = "content"
             api_url = 'ghost/api/v2/content'
             api_key = '?key={}'.format(content_api_key)
+        # 2) Public API
+        elif client_secret_begin != -1:
+            client_secret_end = website_source.find('});', client_secret_begin)
+            # Get secret
+            client_secret = website_source[client_secret_begin + 15:client_secret_end - 2]
+            # Set variables
+            api_type = "public"
+            client_id = 'ghost-frontend' 
+            api_url = 'ghost/api/v0.1'
+            api_key = '?client_id={}&client_secret={}'.format(client_id, client_secret)
+        
         # Exit with error
         else:
             alert = 'Website detected, but no API found. See the instructions section below.'
