@@ -2,7 +2,7 @@
 Statistics for websites using Ghost, the best platform for blogging. Learn more at [Ghost.org](https://ghost.org).
 
 ## Development
-The website uses Flask (a python framework) on Heroku.
+The website uses Flask (a python framework) and is hosted on Heroku.
 
 ## Setup
 1. Install and setup virtual environment
@@ -10,14 +10,13 @@ The website uses Flask (a python framework) on Heroku.
 pip install virtualenv
 virtualenv env
 ```
-2. Activate environment
-On Mac:
+2. Activate environment (on Mac):
 ```python
 source /path/to/env/bin/activate
 ```
-On Windows:
+2. Activate environment (on Windows):
 ```python
-\path\to\env\bin\activate
+'\path\to\env\bin\activate
 ```
 3. Install python dependencies
 ```python
@@ -27,4 +26,4 @@ pip install -r requirements.txt
 ```python
 python deploy.py
 ```
-The server can be reached at http://localhost:5000
+The server can be reached at http://localhost:5000 and updates automatically as long as `app.debug = True` in deploy.py.
