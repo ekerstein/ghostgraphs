@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+
+{# Add page title #}
+{% set page_title = input_value + ' - GhostGraphs' %}
+{% set page_desc = "Statistics for Ghost website: " + input_value %}
+
+{% block input_checks %}
+
+<div class="row mx-0 mb-1">
+	<button class="btn btn-white btn-sm" type="button">
+		<a href="{{website_url}}" target="_blank">
+			<span class="fas fa-external-link-alt" aria-hidden="true"></span> Visit website
+		</a>
+	</button>
+	{#
+	<button class="btn btn-outline-success btn-sm border-0 ml-2" type="button" style="opacity: 0.8" disabled>
+		<span class="fas fa-check" aria-hidden="true"></span> Ghost.org website
+	</button>
+	#}
+	{% if api_type == "old" %}
+	<button class="btn btn-outline-danger btn-sm border-0 ml-2" type="button" style="opacity: 1" disabled>
+		<span class="fas fa-times" aria-hidden="true"></span> Old API detected
+	</button>
+	{% elif api_type == "public" %}
+	<button class="btn btn-outline-success btn-sm border-0 ml-2" type="button" style="opacity: 0.8" disabled>
+		<span class="fas fa-check" aria-hidden="true"></span> Public API detected
+	</button>
+	{% elif api_type == "content" %}
+	<button class="btn btn-outline-success btn-sm border-0 ml-2" type="button" style="opacity: 0.8" disabled>
+		<span class="fas fa-check" aria-hidden="true"></span> Content API detected
+	</button>
+	{% endif %}
+</div>
+
+{% endblock %}
+
+{% block content %}
+
+{# Dashboard #}
+<div class="row text-center mx-0 mb-4">
+	<div class="col-6 col-sm-4 col-md-2 mb-3 mb-md-0">
+		<div id="dash-posts" class="dash-big display-5">0</div>
+		<div class="dash-small text-secondary">posts published</div>
+	</div>
+	<div class="col-6 col-sm-4 col-md-2 mb-3 mb-md-0">
+		<div id="dash-lastpost" class="dash-big display-5">0</div>
+		<div class="dash-small text-secondary">days since post</div>
+	</div>
+	<div class="col-6 col-sm-4 col-md-2 mb-3 mb-md-0">
+		<div id="dash-words" class="dash-big display-5">0</div>
+		<div class="dash-small text-secondary">words published</div>
+	</div>
+	<div class="col-6 col-sm-4 col-md-2 mb-3 mb-sm-0">
+		<div id="dash-avgwords" class="dash-big display-5">0</div>
+		<div class="dash-small text-secondary">avg words / post</div>
+	</div>
+	<div class="col-6 col-sm-4 col-md-2">
+		<div id="dash-authors" class="dash-big display-5">0</div>
+		<div class="dash-small text-secondary">authors with posts</div>
+	</div>
+	<div class="col-6 col-sm-4 col-md-2">
+		<div id="dash-tags" class="dash-big display-5">0</div>
+		<div class="dash-small text-secondary">tags in use</div>
+	</div>
+</div>
+
+{# Cards #}
+<div class="card-deck mb-3 px-5px">
+
+	<div class="card">
+		<div class="card-body">
+			<h4 class="card-title">Post Activity</h4>
+			<p class="card-text">Number of posts and words published over time.</p>
+		</div>
+		<div class="chart-container">
+			<canvas id="chart1"></canvas>
+		</div>
+	</div>
+
+	<!--  <= sm  -->
+	<div class="w-100 d-md-none"></div>
+
+	<div class="card">
+		<div class="card-body">
+			<h4 class="card-title">Post Length</h4>
+			<p class="card-text">Distribution of words per post.</p>
+		</div>
+		<div class="chart-container">
+			<canvas id="chart2"></canvas>
+		</div>
+	</div>
+
+	<!--  always  -->
+	<div class="w-100"></div>
+
+</div>
+
+{#
+<div class="row mx-0">
+	<div class="col-sm">
+		<dl class="row">
+			<dt class="col-8 col-md-7">Posts published</dt>
+			<dd id="stat-posts" class="col-4 col-md-5">0</dd>
+
+			<dt class="col-8 col-md-7">Last post</dt>
+			<dd id="stat-lastpost" class="col-4 col-md-5">0</dd>
+
+			<dt class="col-8 col-md-7">Avg posts / month</dt>
+			<dd class="col-4 col-md-5">0</dd>
+
+			<dt class="col-8 col-md-7">Total words</dt>
+			<dd id="stat-totalwords" class="col-4 col-md-5">0</dd>
+
+			<dt class="col-8 col-md-7">Min words / post</dt>
+			<dd id="stat-minwords" class="col-4 col-md-5">0</dd>
+
+			<dt class="col-8 col-md-7">Max words / post</dt>
+			<dd id="stat-maxwords" class="col-4 col-md-5">0</dd>
+
+			<dt class="col-8 col-md-7">Avg words / post</dt>
+			<dd id="stat-avgwords" class="col-4 col-md-5">0</dd>
+		</dl>
+	</div>
+	<div class="col">
+		<dl class="row">
+			<dt class="col-8 col-md-7">Tags in use</dt>
+			<dd id="stat-tags" class="col-4 col-md-5">0</dd>
+
+			<dt class="col-8 col-md-7">Avg tags / post</dt>
+			<dd class="col-4 col-md-5">0</dd>
+
+			<dt class="col-8 col-md-7">Authors with posts</dt>
+			<dd id="stat-authors" class="col-4 col-md-5">0</dd>
+		</dl>
+	</div>
+</div>
+#}
+
+{% endblock %}
+
+{% block js %}
+
+{# Moment.js, Chart.js #}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.23.0/moment.min.js" integrity="sha256-VBLiveTKyUZMEzJd6z2mhfxIqz3ZATCuVMawPZGzIfA="
+ crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js" integrity="sha256-oSgtFCCmHWRPQ/JmR4OoZ3Xke1Pw4v50uh6pLcu+fIc="
+ crossorigin="anonymous"></script>
+
+{# Load website data #}
+<script>
+	// Convert HTML to JSON
+	var txt = document.createElement('textarea');
+	txt.innerHTML = '{{api_data}}';
+	var api_data = JSON.parse(txt.value);
+
+	console.log(api_data)
+</script>
+
+{# Chart data #}
+<script src="{{ url_for('static', filename='js/charts.js') }}"></script>
+
+{# Update dash for old api #}
+{% if api_type == "old" %}
+<script>
+$('#dash-tags, #dash-authors').text('?')
+</script>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,123 @@
+/*----------------------------------------------------------*/
+/* BODY */
+
+.container-body {
+	max-width: 1024px;
+}
+
+/*----------------------------------------------------------*/
+/* PADDING & MARGIN */
+
+.px-5px {
+	padding-left: 5px;
+	padding-right: 5px;
+}
+
+.px-10px {
+	padding-left: 10px !important;
+	padding-right: 10px !important;
+}
+
+.mx-10px {
+	margin-left: 10px;
+	margin-right: 10px;
+}
+
+/*----------------------------------------------------------*/
+/* DASH */
+
+.dash-small {
+	font-size: 12px;
+}
+
+.display-5 {
+	font-size: 2.6rem;
+    font-weight: 300;
+    line-height: 1.2;
+}
+
+/*----------------------------------------------------------*/
+/* CARDS */
+
+/* for card-deck */
+.card-deck {
+	margin: 0px;
+	margin-top: -10px;
+}
+
+.card {
+	/* border: 1px solid rgba(0,0,0,.125); */
+	margin-bottom: 10px !important;
+	margin: 10px 5px 0px 5px !important;
+}
+
+/* for blank spacing */
+.card.blank {
+	border: 0px;
+	height: 0px;
+	margin: 0px !important;
+}
+
+/* header */
+.card-body {
+	padding: 6px 10px;
+	padding-bottom: 8px;
+}
+
+.card-title {
+	margin-bottom: 0px; /* move subtitle up */
+	font-size: 20px;
+	padding-bottom: 0px;
+	font-weight: 600;
+}
+
+.card-title a {
+	color: black
+}
+
+.card-text {
+	font-size: 11.44px;
+	font-style: italic;
+	display: inline-block; /* needed for line height */
+	line-height: 1.2;
+	vertical-align: text-top; /* lines up text across cards */
+}
+
+.card-text-lg {
+	padding-top: 5px;
+	margin-bottom: 0px;
+	line-height: 1.35;
+	font-size: 16px;
+}
+
+/*----------------------------------------------------------*/
+/* CHART */
+
+.spinner {
+	position: relative;
+}
+
+.chart-container {
+	position: relative;
+	margin: auto;
+	height: 200px;
+	width: 100%;
+}
+
+/*----------------------------------------------------------*/
+/* DEVICE SETTINGS */
+
+/* On small devices */
+@media (max-width: 450px) {
+
+	/* make chart smaller */
+	.chart-container {
+		height: 150px;
+	}
+
+	/* fix subtitle height */
+	.card-title {
+		padding-bottom: 1px; 
+	}
+
+}

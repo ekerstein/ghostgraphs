@@ -1,0 +1,34 @@
+switcher at top: created, published, updated
+
+- detect older API
+
+POSTS
+by month
+by day of week
+by time of day
+words/post
+
+AUTHOR
+posts by author
+pie chart by author
+radar chart by tag/author
+avg posts/author
+
+TAGS
+avg tags/post
+
+
+posts along left side - line connecting created/published/updated
+
+STATS
+posts
+avg posts/month
+days since last post
+authors
+tags
+next post to keep average
+
+
+FINISHED
+- total words over time
+- word count histogram

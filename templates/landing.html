@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{# Add page title #}
+{% set page_title = "GhostGraphs - Statistics for Ghost Websites" %}
+{% set page_desc = "Statistics for websites using the Ghost blogging platform. With charts of posts and words published over time you can know exactly how productive you're being. More statistics coming soon." %}
+
+{% block content %}
+
+<div class="jumbotron mx-10px mb-4">
+    <h1>Statistics for Ghost Websites</h1>
+    <p class="lead">See how many posts and words you've published over time to know exactly how productive you're being. More statistics coming soon. Only available for websites running Ghost, the best platform for blogging. <a class="" href="https://ghost.org">Learn more at Ghost.org</a>.</p>
+    <a class="btn btn-lg btn-primary" href="/https://blog.ghost.org" role="button">Try an example »</a>
+</div>
+
+<div class="container-fluid px-10px mb-4 pb-2">
+    <p class="h3 mb-3">Instructions</p>
+    </p>If you have the latest version of Ghost then you will need to modify your page header to give our site access to your API.</p>
+    <ol>
+        <li>Go to Settings -> Integrations -> Add Custom Integration</li>
+        <li>Name the integration "GhostGraphs"</li>
+        <li>Then copy the "Content API Key"</li>
+        <li>Go to Settings -> Code Injection</li>
+        <li>Add the following to your blog header, replacing "content" with the API key you copied</li>
+    </ol>
+    <code>
+        <mark>
+            &lt;!-- GhostGraphs.com --&gt;<br>
+            &lt;meta name="ghostgraphs" content="7731dea759b0b453e5e2c7a9d7" /&gt;
+        </mark>
+    </code>
+</div>
+
+<div class="container-fluid px-10px mb-5">
+    <p class="h3 mb-3">Try more websites</p>
+    <div class="row mx-0 mb-4">
+        <div id="landing-col1" class="col-12 col-sm-6 col-md-4"></div>
+        <div id="landing-col2" class="col-12 col-sm-6 col-md-4"></div>
+        <div id="landing-col3" class="col-12 col-sm-6 col-md-4"></div>
+    </div>
+    <p style="text-decoration: underline"><a href="https://twitter.com/home?status=Add%20my%20website,%20example.com,%20to%20the%20list%20at%20%40ghost_graphs">Add my website to the list</a></p>
+</div>
+
+
+{% endblock %}
+
+{% block js %}
+<script>
+
+    // Show alert if site isn't valid
+    {% if alert %}
+    alert.show('{{alert}}');
+    {% endif %}
+    
+    // Get landing sites
+    var file = "{{ url_for('static', filename='misc/landing-sites.txt') }}";
+    $.get(file, function (txt) {
+        var lines = txt.split("\n");
+        var col2 = Math.round(lines.length / 3)
+        var col1 = Math.round((lines.length - col2) / 2)
+        // col 1
+        for (var i = 0; i < col1; i++) {
+            $("#landing-col1").append("<div><a href='/" + lines[i] + "'>" + lines[i] + "</a></div>");
+        }
+        // col 2
+        for (var i = col1; i < (col1 + col2); i++) {
+            $("#landing-col2").append("<div><a href='/" + lines[i] + "'>" + lines[i] + "</a></div>");
+        }
+        // col 3
+        for (var i = (col1 + col2); i < lines.length; i++) {
+            $("#landing-col3").append("<div><a href='/" + lines[i] + "'>" + lines[i] + "</a></div>");
+        }
+    });
+
+</script>
+{% endblock %}

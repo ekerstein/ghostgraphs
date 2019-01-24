@@ -1,0 +1,2 @@
+User-agent: *
+Sitemap: https://ghostgraphs.com/sitemap.xml
