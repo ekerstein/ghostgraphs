@@ -1,3 +1,0 @@
-blog.fullstory.com
-
-https://blog.fullstory.com/public/ghost-sdk.min.js?v=e8e62c957d

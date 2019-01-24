@@ -60,7 +60,7 @@ for (i = 0; i < api_data.length; i++) {
     data.value.push(i + 1);
 }
 
-console.log(data)
+//console.log(data)
 
 // Add final point for current date
 data.time.push(moment());
@@ -119,7 +119,7 @@ Chart.Tooltip.positioners.custom = function (elements, position) {
         y: y
     };
 }
-//Chart.defaults.global.tooltips.position = 'custom';
+Chart.defaults.global.tooltips.position = 'custom';
 //
 Chart.defaults.global.animation.duration = 0; // general animation time
 Chart.defaults.global.hover.animationDuration = 0; // duration of animations when hovering an item
@@ -159,34 +159,29 @@ Chart.scaleService.updateScaleDefaults('time', {
 //////////////////////////////////////////////////////////////////////////////////////
 // MAKE HISTOGRAM
 
-// Choose data object
-hist_data = data.words
+function histogram(data) {
 
-function histogram(vector, options) {
-
-    options = options || {};
-    options.copy = options.copy === undefined ? true : options.copy;
-    options.pretty = options.pretty === undefined ? true : options.pretty;
-
-    var s = vector;
-    if (options.copy) s = s.slice();
-    s.sort(function (a, b) {
+    // sort data ascending
+    data.sort(function (a, b) {
         return a - b;
     });
 
+    // Quantile function
     function quantile(p) {
-        var idx = 1 + (s.length - 1) * p,
-            lo = Math.floor(idx),
-            hi = Math.ceil(idx),
-            h = idx - lo;
-        return (1 - h) * s[lo] + h * s[hi];
+        var index = 1 + (data.length - 1) * p,
+            low = Math.floor(index),
+            high = Math.ceil(index),
+            hh = index - low;
+        return (1 - hh) * data[low] + hh * data[high];
     }
 
     function freedmanDiaconis() {
+        // Interquartile range
         var iqr = quantile(0.75) - quantile(0.25);
-        return 2 * iqr * Math.pow(s.length, -1 / 3);
+        return 2 * iqr * Math.pow(data.length, -1 / 3);
     }
 
+    // Make bins round
     function pretty(x) {
         var scale = Math.pow(10, Math.floor(Math.log(x / 10) / Math.LN10)),
             err = 10 / x * scale;
@@ -196,26 +191,26 @@ function histogram(vector, options) {
         return scale * 10;
     }
 
-    var h = freedmanDiaconis();
-    if (options.pretty) h = pretty(h);
+    var bin_size = freedmanDiaconis();
+    bin_size = pretty(bin_size);
 
     function bucket(d) {
-        return h * Math.floor(d / h);
+        return bin_size * Math.floor(d / bin_size);
     }
 
     function tickRange(n) {
-        var extent = [bucket(s[0]), h + bucket(s[s.length - 1])],
-            buckets = Math.round((extent[1] - extent[0]) / h),
+        var extent = [bucket(data[0]), bin_size + bucket(data[data.length - 1])],
+            buckets = Math.round((extent[1] - extent[0]) / bin_size),
             step = buckets > n ? Math.round(buckets / n) : 1,
             pad = buckets % step; // to center whole step markings
-        return [extent[0] + h * Math.floor(pad / 2),
-        extent[1] - h * Math.ceil(pad / 2) + h * 0.5, // pad upper extent for d3.range
-        h * step
+        return [extent[0] + bin_size * Math.floor(pad / 2),
+        extent[1] - bin_size * Math.ceil(pad / 2) + bin_size * 0.5, // pad upper extent for d3.range
+        bin_size * step
         ];
     }
 
     return {
-        size: h,
+        size: bin_size,
         fun: bucket,
         tickRange: tickRange
     };
@@ -226,18 +221,25 @@ function range(start, end, step = 1) {
     return Array(len).fill().map((_, idx) => start + (idx * step))
 }
 
+var hist_data = data.words;
 var hist = histogram(hist_data);
-var binRange = hist.tickRange();
-var hist_x = range(binRange[0], Math.round(binRange[1]), binRange[2]);
-var hist_y = Array(hist_x.length).fill(0)
 
+var binRange = hist.tickRange();
+
+
+// Make x axis bins, start, end, step
+var hist_x = range(binRange[0], Math.round(binRange[1]), binRange[2]);
+
+// Make and fill y axis incidence
+var hist_y = Array(hist_x.length).fill(0)
 for (var i = 0; i < hist_data.length; i++) {
     var value = hist_data[i];
     var index = hist_x.indexOf(hist.fun(value));
     hist_y[index] = hist_y[index] + 1;
 }
 
-var hist_step = binRange[2] // amount of each bin increment
+// amount of each bin increment
+var hist_step = hist.size; 
 
 //////////////////////////////////////////////////////////////////////////////////////
 // CHART 1
@@ -384,6 +386,10 @@ var chart2 = new Chart($("#chart2"), {
             }],
             yAxes: [{
                 display: true,
+                scaleLabel: {
+                    display: true,
+                    labelString: "Posts"
+                }, 
             }]
         }
     }
