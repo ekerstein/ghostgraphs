@@ -16,7 +16,7 @@ source /path/to/env/bin/activate
 ```
 2. Activate environment (on Windows):
 ```python
-\\path\\to\\env\\bin\\activate
+/path/to/env/bin/activate
 ```
 3. Install python dependencies
 ```python
