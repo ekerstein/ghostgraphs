@@ -10,6 +10,8 @@ $('#dash-posts').text(api_data.length) // Set dashboard posts
 //////////////////////////////////////////////////////////////////////////////////////
 // MAKE DATA
 
+var colors = ["#e41a1c","#377eb8","#4daf4a","#984ea3","#ff7f00","#ffff33","#a65628","#f781bf","#999999"];
+
 // Function to sort array
 function sortByKey(array, key) {
     return array.sort(function (a, b) {
@@ -32,10 +34,27 @@ var data = {
     'words': [],
     'cumu-words': [],
     'time': [],
-    'value': []
+    'count': [],
+    'months': {
+        'dates': [],
+        'totals': []
+    }
 }
 
-// Iterate through sql data
+// Create month array
+// Add first month
+var month = moment(api_data[0].published);
+data.months.dates.push(month.format('YYYY-MM'))
+data.months.totals.push(0);
+
+// Loop forward through all months
+while (month.format('YYYY-MM') != moment(api_data[api_data.length - 1].published).format('YYYY-MM')) {
+    month.add(1, 'month');
+    data.months.dates.push(month.format('YYYY-MM')) 
+    data.months.totals.push(0);
+}
+
+// Iterate through data
 for (i = 0; i < api_data.length; i++) {
     // For each author
     for (j = 0; j < api_data[i].authors.length; j++) {
@@ -55,16 +74,20 @@ for (i = 0; i < api_data.length; i++) {
     data.words.push(api_data[i].words);
     data["total-words"] += api_data[i].words;
     data["cumu-words"].push(data["total-words"]);
-    //
+    // Time and count
     data.time.push(moment(api_data[i].published));
-    data.value.push(i + 1);
+    data.count.push(i + 1);
+    // Count monthly posts
+    var month = moment(api_data[i].published).format('YYYY-MM');
+    data.months.totals[data.months.dates.indexOf(month)] += 1;
+
 }
 
-//console.log(data)
+console.log(data)
 
-// Add final point for current date
+// Add final point for time, count, and words
 data.time.push(moment());
-data.value.push(data.value.length);
+data.count.push(data.count.length);
 data["cumu-words"].push(data["total-words"]);
 
 //////////////////////////////////////////////////////////////////////////////////////
@@ -252,13 +275,11 @@ var chart1 = new Chart($("#chart1"), {
             {
                 label: "Posts",
                 yAxisID: 'posts',
-                data: data.value,
+                data: data.count,
                 steppedLine: true,
                 backgroundColor: 'rgba(0, 0, 0, 0)',
-                borderColor: 'blue',
-                borderWidth: 1.0,
-                pointBackgroundColor: 'blue',
-                pointBorderColor: 'blue',
+                borderColor: colors[1],
+                borderWidth: 1.5,
                 pointRadius: 0,
                 pointHoverRadius: 0,
                 showLine: true,
@@ -270,10 +291,8 @@ var chart1 = new Chart($("#chart1"), {
                 data: data["cumu-words"],
                 steppedLine: true,
                 backgroundColor: 'rgba(0, 0, 0, 0)',
-                borderColor: 'green',
-                borderWidth: 1.0,
-                pointBackgroundColor: 'green',
-                pointBorderColor: 'green',
+                borderColor: colors[6],
+                borderWidth: 1.5,
                 pointRadius: 0,
                 pointHoverRadius: 0,
                 showLine: true,
@@ -360,7 +379,7 @@ var chart2 = new Chart($("#chart2"), {
             {
                 label: "Posts",
                 data: hist_y,
-                backgroundColor: 'blue',
+                backgroundColor: colors[3],
             }
         ]
     },
@@ -383,6 +402,57 @@ var chart2 = new Chart($("#chart2"), {
                 display: true,
                 categoryPercentage: 1.0,
                 barPercentage: 1.0
+            }],
+            yAxes: [{
+                display: true,
+                scaleLabel: {
+                    display: true,
+                    labelString: "Posts"
+                }, 
+            }]
+        }
+    }
+});
+
+//////////////////////////////////////////////////////////////////////////////////////
+// CHART 3
+
+var chart3 = new Chart($("#chart3"), {
+    type: 'bar',
+    data: {
+        labels: data.months.dates,
+        datasets: [
+            {
+                label: "Posts",
+                data: data.months.totals,
+                backgroundColor: colors[2],
+            }
+        ]
+    },
+    options: {
+        tooltips: {
+            callbacks: {
+                label: function (tooltipItem, data) {
+                    // if !NaN
+                    return data.datasets[tooltipItem.datasetIndex].label + ': ' + numberWithCommas(tooltipItem.yLabel.toFixed(0)) + '';
+                }
+            }
+        },
+        scales: {
+            xAxes: [{
+                display: true,
+                type: 'time',
+                offset: true,
+                //categoryPercentage: 1,
+                barPercentage: 1,
+                time: {
+                    tooltipFormat: 'MMM YYYY',
+                    //unit: 'month', // always display this
+                    displayFormats: {
+                        day: 'MMM',
+                        month: 'YYYY'
+                    }
+                },
             }],
             yAxes: [{
                 display: true,
