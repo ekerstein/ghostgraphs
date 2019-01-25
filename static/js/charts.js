@@ -48,7 +48,7 @@ data.months.dates.push(month.format('YYYY-MM'))
 data.months.totals.push(0);
 
 // Loop forward through all months
-while (month.format('YYYY-MM') != moment(api_data[api_data.length - 1].published).format('YYYY-MM')) {
+while (month.format('YYYY-MM') != moment().format('YYYY-MM')) {
     month.add(1, 'month');
     data.months.dates.push(month.format('YYYY-MM')) 
     data.months.totals.push(0);
@@ -83,7 +83,7 @@ for (i = 0; i < api_data.length; i++) {
 
 }
 
-console.log(data)
+//console.log(data)
 
 // Add final point for time, count, and words
 data.time.push(moment());
