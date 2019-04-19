@@ -36,13 +36,13 @@ def robots():
 # Error - 404
 @app.errorhandler(404)
 def page_not_found_error(e):
-    alert = 'Error 404 - Page not found. If you see this, please contact twitter.com/ghost_graphs'
+    alert = 'Error 404 - Page not found. If you see this, please contact twitter.com/EdwardKerstein'
     return render_template('landing.html', alert=alert), 404
 
 # Error - 500
 @app.errorhandler(500)
 def internal_server_error(e):
-    alert = 'Error 500 - Internal server error. If you see this, please contact twitter.com/ghost_graphs'
+    alert = 'Error 500 - Internal server error. If you see this, please contact twitter.com/EdwardKerstein'
     return render_template('landing.html', alert=alert), 500
 
 # Charts & Dashboards
