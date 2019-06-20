@@ -1,6 +1,5 @@
 blog.cloudflare.com
 blog.revolut.com
-blog.openai.com
 blog.emojipedia.org
 speedtest.net/insights/blog
 blog.realmacsoftware.com
@@ -10,15 +9,15 @@ notunhealthy.com
 blog.woven.com
 blog.wps.com
 blog.pimoroni.com
-ghostboard.io/blog
 spreadprivacy.com
 blog.gotinder.com
 blog.circle.com
 blog.airtable.com
 blog.mozvr.com
 tech.okcupid.com
-blog.playground.global
 blog.bitpay.com
 blog.napster.com
 engineering.gusto.com
 tech.transferwise.com
+news.codecademy.com
+blog.codecombat.com
