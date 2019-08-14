@@ -265,9 +265,9 @@ for (var i = 0; i < hist_data.length; i++) {
 var hist_step = hist.size; 
 
 //////////////////////////////////////////////////////////////////////////////////////
-// CHART 1
+// POSTS PUBLISHED
 
-var chart1 = new Chart($("#chart1"), {
+var posts_published = new Chart($("#posts-published"), {
     type: 'line',
     data: {
         labels: data.time,
@@ -323,8 +323,8 @@ var chart1 = new Chart($("#chart1"), {
                     tooltipFormat: 'll hh:mm A', //'ll HH:mm'
                     //unit: 'month', // always display this
                     displayFormats: {
-                        //day: 'MMM',
-                        month: 'YYYY'
+                        day: 'MMM',
+                        month: 'MMM YYYY'
                     }
                 }
             }],
@@ -373,55 +373,9 @@ var chart1 = new Chart($("#chart1"), {
 });
 
 //////////////////////////////////////////////////////////////////////////////////////
-// CHART 2
+// POSTS PER MONTH
 
-var chart2 = new Chart($("#chart2"), {
-    type: 'bar',
-    data: {
-        labels: hist_x,
-        datasets: [
-            {
-                label: "Posts",
-                data: hist_y,
-                backgroundColor: colors[3],
-            }
-        ]
-    },
-    options: {
-        tooltips: {
-            callbacks: {
-                title: function (tooltipItem, data) {
-                    return data.labels[tooltipItem[0].index] + " - " + (data.labels[tooltipItem[0].index] + hist_step);
-                },
-                label: function (tooltipItem, data) {
-                    // if !NaN
-                    if (tooltipItem.yLabel) {
-                        return data.datasets[tooltipItem.datasetIndex].label + ': ' + numberWithCommas(tooltipItem.yLabel.toFixed(0)) + '';
-                    }
-                }
-            }
-        },
-        scales: {
-            xAxes: [{
-                display: true,
-                categoryPercentage: 1.0,
-                barPercentage: 1.0
-            }],
-            yAxes: [{
-                display: true,
-                scaleLabel: {
-                    display: true,
-                    labelString: "Posts"
-                }, 
-            }]
-        }
-    }
-});
-
-//////////////////////////////////////////////////////////////////////////////////////
-// CHART 3
-
-var chart3 = new Chart($("#chart3"), {
+var posts_month = new Chart($("#posts-month"), {
     type: 'bar',
     data: {
         labels: data.months.dates,
@@ -454,9 +408,56 @@ var chart3 = new Chart($("#chart3"), {
                     //unit: 'month', // always display this
                     displayFormats: {
                         day: 'MMM',
-                        month: 'YYYY'
+                        month: 'MMM YYYY'
                     }
                 },
+            }],
+            yAxes: [{
+                display: true,
+                scaleLabel: {
+                    display: true,
+                    labelString: "Posts"
+                }, 
+            }]
+        }
+    }
+});
+
+
+//////////////////////////////////////////////////////////////////////////////////////
+// POSTS PER MONTH
+
+var posts_histogram = new Chart($("#posts-histogram"), {
+    type: 'bar',
+    data: {
+        labels: hist_x,
+        datasets: [
+            {
+                label: "Posts",
+                data: hist_y,
+                backgroundColor: colors[3],
+            }
+        ]
+    },
+    options: {
+        tooltips: {
+            callbacks: {
+                title: function (tooltipItem, data) {
+                    return data.labels[tooltipItem[0].index] + " - " + (data.labels[tooltipItem[0].index] + hist_step);
+                },
+                label: function (tooltipItem, data) {
+                    // if !NaN
+                    if (tooltipItem.yLabel) {
+                        return data.datasets[tooltipItem.datasetIndex].label + ': ' + numberWithCommas(tooltipItem.yLabel.toFixed(0)) + '';
+                    }
+                }
+            }
+        },
+        scales: {
+            xAxes: [{
+                display: true,
+                categoryPercentage: 1.0,
+                barPercentage: 1.0
             }],
             yAxes: [{
                 display: true,
