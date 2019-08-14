@@ -13,7 +13,7 @@ import json # for parsing json
 # INITIALIZE
 
 app = Flask(__name__)
-app.debug = True
+app.debug = False
 
 #################################################################
 # URL ROUTES
